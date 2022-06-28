@@ -27,26 +27,28 @@ class App extends Component {
       );
   }
 
+  // method is outsourched so render doesn't have to initialize an anonymous function each time
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLowerCase();
+    this.setState(() => {
+      return { searchField }; // equal to { searchField: searchField}
+    });
+  };
+
   render() {
     console.log("render");
 
-    const filteredMonsters = this.state.monsters.filter((monster) => {
-      return monster.name.toLowerCase().includes(this.state.searchField);
+    // Destructuring (ES6): no nedd for 'this' anymore
+    const { monsters, searchField } = this.state;
+    const { onSearchChange } = this;
+
+    const filteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLowerCase().includes(searchField);
     });
 
     return (
       <div className='App'>
-        <input
-          className='search-box'
-          type='search'
-          placeholder='search monsters'
-          onChange={(event) => {
-            const searchField = event.target.value.toLowerCase();
-            this.setState(() => {
-              return { searchField }; // equal to { searchField: searchField}
-            });
-          }}
-        />
+        <input className='search-box' type='search' placeholder='search monsters' onChange={onSearchChange} />
         {filteredMonsters.map((monster) => {
           return (
             <div key={monster.id}>
